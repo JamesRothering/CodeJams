@@ -14,8 +14,48 @@ public class Perm
     printArray(aTestResults);
   }//end-main
 
+  static int[][] getPermutations(int[][] aArray)
+  {
+
+    int[][] aReturn = new int[factorial(aArray[0].length)][aArray[0].length];
+    if(2 == aArray.length)
+    {//base case
+      for (int i=0; i< aArray[0].length;i++)
+      {
+        aReturn[i] =Arrays.copyOf(aArray[i],aArray[i].length);
+      }//end-for
+      //then permute the values
+      for (int i=1; i<aArray.length; i++)
+      { //first init the the 2-d return arry with copies of the original array
+        aReturn[i] = Arrays.copyOf(aArray[i],aArray[i].length);
+      }//end-for
+      //then permute the elements
+      for (int i=1; i<2; i++)
+        swap(aReturn, 1,0, 1,1);
+      return aReturn;
+    }//end-then
+    else //when not the base case
+    {
+System.out.println("about to init the new array");
+printArray(aArray);
+      int[] aShorterArray = new int[ (aArray[0].length-1)];
+          aShorterArray = Arrays.copyOf(aArray[0],aArray[0].length-1);
+      int[][] aSeedArray=  getPermutations(aShorterArray);
+printArray(aSeedArray);
+
+//      for (int i =0, j=0; j < factorial(aArray.length); j++,i++)
+//      {
+//        if (i >= aSeeArray.length-1) i=0; //reset this for the next batc
+// System.out.println("got here, j=" + j + " " + aReturn[j].length);
+//        aReturn[j] = Arrays.copyOf(aSeedArray,aSeedArray.length);
+//      }//end-for
+
+    }//end-else
+    return aReturn;
+  }//end-method getPermutations overloaded
+
   static int[][] getPermutations(int[] aArray)
-  { //recursive method
+  { //recursive method overloaded so this one is the first one called
     int[][] aReturn = new int[factorial(aArray.length)][aArray.length];
     int[]   aShorterArray = new int[aArray.length-1];
     if (2 == aArray.length)
@@ -29,7 +69,7 @@ System.out.println("in the base case now");
       //then permute the array values
       for (int i =1; i< 2; i++)
         swap(aReturn, 1,0, 1,1);
-//here be a return
+printArray(aReturn);
       return aReturn;
     }//end-then
     else //the recursive cases
@@ -51,9 +91,9 @@ System.out.println("got here, j=" + j + " " + aReturn[j].length);
         aShorterArray = Arrays.copyOf(aArray,aArray.length-1);
 //    }//end-else
 
-      printArray(aShorterArray);
-      return getPermutations(aShorterArray);
-      }//end-else
+       getPermutations(aShorterArray);
+       return aReturn;
+    }//end-else
 //return aReturn;
 
   }//end-permute
