@@ -3,16 +3,9 @@ public class Perm
 {
   public static void main(String[] argv)
   {
-    int[] aTest      = new int[] {1,2,3,4};
-
-//insertion test case:
-//    int[] aTestResult = insert(aTest, 99, 3);
-//    printArray(aTestResult);
-//    aTest = aTestResult;
-
-
+    int[] aTest      = new int[] {1,2,3};
     int[][] aTestResults = getPermutations(aTest);
-    
+  
     printArray(aTestResults);
   }//end-main
 
@@ -22,19 +15,13 @@ public class Perm
     int[]   aShorterArray = new int[aArray.length-1];
     if (2 == aArray.length)
     {//base case
-     // first initialize the 2-D return array with copies of the original array
-      for (int i=0; i<aArray.length;i++)
-      {
-        aReturn[i] = Arrays.copyOf(aArray,aArray.length);
-      }//end-for
-      //then permute the array values
-      for (int i =1; i< 2; i++)
-        swap(aReturn, 1,0, 1,1);
+      // since this is the base case, I just return the answer
+      aReturn = new int[][]{{aArray[0],aArray[1]},{aArray[1],aArray[0]}};
       return aReturn;
     }//end-then
     else //the recursive cases
     {
-      //if the array is 3, we loop three times copying the 2-D array thrice
+      //if the array is n, we loop n times copying the 2-D array n time
       //  i is our outer factorial amount (i.e., "3" in a 3! situation
       //  j, however, keeps track of the full 6 elements we have to init
       aShorterArray = Arrays.copyOf(aArray,aArray.length-1);
@@ -55,17 +42,12 @@ public class Perm
       int aLastElement = aArray[aArray.length-1];
       for (int i=0, j=0; j < factorial(aArray.length); i++,j++)
       {
-
-
         if (i >= aArray.length) i=0; //reset for next position
-//==>
         aReturn[j] = insert(aReturn[j],aLastElement, i);
       }//end-for
 
-       return aReturn;
+      return aReturn;
     }//end-else
-//return aReturn;
-
   }//end-permute
 
   static int[] insert(int[] aArray, int aElement, int aPosition)
@@ -129,11 +111,4 @@ public class Perm
       printArray(aArrayOfArrays[i]);
     }//end-for
   }//end-method printArray
-  static void swap (int[][] a2DArray, int aX1,int aY1, int aX2, int aY2)
-  {
-    int aTempElement1  = a2DArray[aX1][aY1];
-    a2DArray[aX1][aY1] = a2DArray[aX2][aY2];
-    a2DArray[aX2][aY2] = aTempElement1;
-  }//end-method swap
 }//end-class Perm
-
