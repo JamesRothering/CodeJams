@@ -3,65 +3,26 @@ public class Perm
 {
   public static void main(String[] argv)
   {
-    int[] aTest      = new int[] {1,2,3};
+    int[] aTest      = new int[] {1,2,3,4};
 
-//problem test case:
-//    int[] aTestResult = insert(aTest, 99, 7);
-//but this case pushes the intent of the method. It should just be prohibited as a parm and issue an error
+//insertion test case:
+//    int[] aTestResult = insert(aTest, 99, 3);
+//    printArray(aTestResult);
+//    aTest = aTestResult;
+
 
     int[][] aTestResults = getPermutations(aTest);
     
     printArray(aTestResults);
   }//end-main
 
-  static int[][] getPermutations(int[][] aArray)
-  {
-
-    int[][] aReturn = new int[factorial(aArray[0].length)][aArray[0].length];
-    if(2 == aArray.length)
-    {//base case
-      for (int i=0; i< aArray[0].length;i++)
-      {
-        aReturn[i] =Arrays.copyOf(aArray[i],aArray[i].length);
-      }//end-for
-      //then permute the values
-      for (int i=1; i<aArray.length; i++)
-      { //first init the the 2-d return arry with copies of the original array
-        aReturn[i] = Arrays.copyOf(aArray[i],aArray[i].length);
-      }//end-for
-      //then permute the elements
-      for (int i=1; i<2; i++)
-        swap(aReturn, 1,0, 1,1);
-      return aReturn;
-    }//end-then
-    else //when not the base case
-    {
-System.out.println("about to init the new array");
-printArray(aArray);
-      int[] aShorterArray = new int[ (aArray[0].length-1)];
-          aShorterArray = Arrays.copyOf(aArray[0],aArray[0].length-1);
-      int[][] aSeedArray=  getPermutations(aShorterArray);
-printArray(aSeedArray);
-
-//      for (int i =0, j=0; j < factorial(aArray.length); j++,i++)
-//      {
-//        if (i >= aSeeArray.length-1) i=0; //reset this for the next batc
-// System.out.println("got here, j=" + j + " " + aReturn[j].length);
-//        aReturn[j] = Arrays.copyOf(aSeedArray,aSeedArray.length);
-//      }//end-for
-
-    }//end-else
-    return aReturn;
-  }//end-method getPermutations overloaded
-
   static int[][] getPermutations(int[] aArray)
-  { //recursive method overloaded so this one is the first one called
+  { //recursive method 
     int[][] aReturn = new int[factorial(aArray.length)][aArray.length];
     int[]   aShorterArray = new int[aArray.length-1];
     if (2 == aArray.length)
     {//base case
      // first initialize the 2-D return array with copies of the original array
-System.out.println("in the base case now");
       for (int i=0; i<aArray.length;i++)
       {
         aReturn[i] = Arrays.copyOf(aArray,aArray.length);
@@ -69,7 +30,6 @@ System.out.println("in the base case now");
       //then permute the array values
       for (int i =1; i< 2; i++)
         swap(aReturn, 1,0, 1,1);
-printArray(aReturn);
       return aReturn;
     }//end-then
     else //the recursive cases
@@ -77,21 +37,31 @@ printArray(aReturn);
       //if the array is 3, we loop three times copying the 2-D array thrice
       //  i is our outer factorial amount (i.e., "3" in a 3! situation
       //  j, however, keeps track of the full 6 elements we have to init
-System.out.println("in the recursive cases now");
+      aShorterArray = Arrays.copyOf(aArray,aArray.length-1);
+      int[][] aSeedArray = new int[factorial(aShorterArray.length)][aShorterArray.length];
+      aSeedArray = getPermutations(aShorterArray);
+
       for (int i =0, j=0; j < factorial(aArray.length); j++,i++)
       {
         if (i >= aArray.length-1) i=0; //reset this for the next batch of copies  
-System.out.println("got here, j=" + j + " " + aReturn[j].length);
-        aReturn[j] = Arrays.copyOf(aArray,aArray.length);
+        aReturn[j] = Arrays.copyOf(aSeedArray[i],aShorterArray.length);
       }//end-for
-      //now we need to move things around to make the permutations
-      //now we need to return the value
-        //so we truncate the first value of the array
-        //  and recursively call the function 
-        aShorterArray = Arrays.copyOf(aArray,aArray.length-1);
-//    }//end-else
 
-       getPermutations(aShorterArray);
+      //we have a set of copies of the prior results, but it's one element
+      //  too short for this matrix.
+      //now we need to insert the new element at varied places, and our
+      //  insert method will return a one element longer array
+
+      int aLastElement = aArray[aArray.length-1];
+      for (int i=0, j=0; j < factorial(aArray.length); i++,j++)
+      {
+
+
+        if (i >= aArray.length) i=0; //reset for next position
+//==>
+        aReturn[j] = insert(aReturn[j],aLastElement, i);
+      }//end-for
+
        return aReturn;
     }//end-else
 //return aReturn;
@@ -114,8 +84,6 @@ System.out.println("got here, j=" + j + " " + aReturn[j].length);
       int i; //we need to use i after the loop
       for (i = 0; i < aPosition; i++)
       {
-System.out.println("aNewArray[" + i +"]=" + aNewArray[i] +
-                   " aArray[" + i + "]=" + aArray[i]);
         aNewArray[i] = aArray[i];
       }//end-for
       //then put in the insertion element
@@ -123,7 +91,7 @@ System.out.println("aNewArray[" + i +"]=" + aNewArray[i] +
                  //  remember, i got incremented in the above loop causing the
                  //  loop condition to fail, so it now equals aPosition
       assert (j == aPosition);
-System.out.println("aElement=" + aElement + " j=" + j + " aPosition=" + aPosition);
+
       aNewArray[j]= aElement;
       //finally, we carry on copying the remainder of the array
       //  but we can't wipe out the j element we just wrote so we increment
@@ -153,6 +121,7 @@ System.out.println("aElement=" + aElement + " j=" + j + " aPosition=" + aPositio
     }//end-for
     System.out.println();
   }//end-method printArray
+
   static void printArray(int[][] aArrayOfArrays)
   {
     for (int i = 0; i < aArrayOfArrays.length; i++)
