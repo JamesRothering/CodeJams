@@ -6,13 +6,13 @@ public class P3V3
 {
   private static List<Child> sChild = new ArrayList<Child>();
 
-  public static void addChild(Child aNewChild)
+  public static synchronized void addChild(Child aNewChild)
   {
     sChild.add(aNewChild);
     System.out.println("added a new Child to track");
   }//end-method addChild
 
-  public static List getChildren()
+  public synchronized static List<Child> getChildren()
   {
     List<Child> aRetList = new ArrayList<Child>();
     for (Child aChild: P3V3.sChild)
@@ -28,7 +28,8 @@ public class P3V3
     Child aChild = new Child(new int[]{1,2,3},new int[]{4,5,6});
 System.out.println("about to enter the for loop");
 System.out.println("length=" + P3V3.sChild.size());
-    for (Child aChild2: P3V3.sChild)
+//    for (Child aChild2: P3V3.sChild)
+    for (Child aChild2: P3V3.getChildren() )
     {
 System.out.println("in the for loop, about to mutate");
       aChild2.mutate();
