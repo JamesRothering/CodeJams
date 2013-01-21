@@ -24,9 +24,13 @@ public class P3V3
 
   public static void main(String[] argv)
   {
+    System.out.println("adding children");
     Child aChild = new Child(new int[]{1,2,3},new int[]{4,5,6});
+System.out.println("about to enter the for loop");
+System.out.println("length=" + P3V3.sChild.size());
     for (Child aChild2: P3V3.sChild)
     {
+System.out.println("in the for loop, about to mutate");
       aChild2.mutate();
       aChild2.print();
     }//end-for
@@ -39,8 +43,15 @@ class Child
   int[] aArray1;
   int[] aArray2;
 
+  Child()
+  {
+    P3V3.addChild(this);
+    System.out.println("in the child constructor, about to addChild");
+  }//end-constructor
+
   Child(int[] aArray1, int[] aArray2)
   {
+    this();
     this.aArray1 = aArray1;
     this.aArray2 = aArray2;
   }//end-constructor
